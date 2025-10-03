@@ -1,5 +1,6 @@
 package com.example.product.controller;
 
+import com.example.product.application.ProductFacadeService;
 import com.example.product.application.ProductService;
 import com.example.product.application.RedisLockService;
 import com.example.product.application.dto.ProductReserveResult;
@@ -14,10 +15,16 @@ public class ProductController {
 
   private final ProductService productService;
   private final RedisLockService redisLockService;
+  private final ProductFacadeService productFacadeService;
 
-  public ProductController(ProductService productService, RedisLockService redisLockService) {
+  public ProductController(
+      ProductService productService,
+      RedisLockService redisLockService,
+      ProductFacadeService productFacadeService
+  ) {
     this.productService = productService;
     this.redisLockService = redisLockService;
+    this.productFacadeService = productFacadeService;
   }
 
   @PostMapping("/product/reserve")
@@ -30,7 +37,7 @@ public class ProductController {
     }
 
     try {
-      ProductReserveResult result = productService.tryReserve(request.toCommand());
+      ProductReserveResult result = productFacadeService.tryReserve(request.toCommand());
       return new ProductReserveResponse(result.totalPrice());
     } finally {
       redisLockService.releaseLock(key);
