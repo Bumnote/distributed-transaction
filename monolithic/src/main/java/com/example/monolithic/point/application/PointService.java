@@ -18,9 +18,6 @@ public class PointService {
   public void use(Long userId, Long amount) {
     Point point = pointRepository.findByUserId(userId);
 
-    if (true) {
-      throw new RuntimeException("foo");
-    }
 
     if (point == null) {
       throw new RuntimeException("포인트가 존재하지 않습니다.");
