@@ -13,7 +13,7 @@ public record ProductReserveRequest(
         requestId,
         items.stream()
             .map(
-                item -> new ProductReserveCommand.ReserveTime(item.productId, item.reserveQuantity)
+                item -> new ProductReserveCommand.ReserveItem(item.productId, item.reserveQuantity)
             ).toList()
     );
   }

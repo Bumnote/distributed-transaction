@@ -4,10 +4,10 @@ import java.util.List;
 
 public record ProductReserveCommand(
     String requestId,
-    List<ReserveTime> items
+    List<ReserveItem> items
 ) {
 
-  public record ReserveTime(
+  public record ReserveItem(
       Long productId,
       Long reserveQuantity
   ) {}

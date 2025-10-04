@@ -3,7 +3,10 @@ package com.example.product.controller;
 import com.example.product.application.ProductFacadeService;
 import com.example.product.application.ProductService;
 import com.example.product.application.RedisLockService;
+import com.example.product.application.dto.ProductReserveCancelCommand;
 import com.example.product.application.dto.ProductReserveResult;
+import com.example.product.controller.dto.ProductReserveCancelRequest;
+import com.example.product.controller.dto.ProductReserveConfirmRequest;
 import com.example.product.controller.dto.ProductReserveRequest;
 import com.example.product.controller.dto.ProductReserveResponse;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,5 +47,36 @@ public class ProductController {
     }
   }
 
+  @PostMapping("/product/confirm")
+  public void confirm(@RequestBody ProductReserveConfirmRequest request) {
+    String key = "product:" + request.requestId();
+    boolean acquiredLock = redisLockService.tryLock(key, request.requestId());
+
+    if (!acquiredLock) {
+      throw new RuntimeException("락 획득에 실패했습니다.");
+    }
+
+    try {
+      productFacadeService.confirmReserve(request.toCommand());
+    } finally {
+      redisLockService.releaseLock(key);
+    }
+  }
+
+  @PostMapping("/product/cancel")
+  public void cancel(@RequestBody ProductReserveCancelRequest request) {
+    String key = "product:" + request.requestId();
+    boolean acquiredLock = redisLockService.tryLock(key, request.requestId());
+
+    if (!acquiredLock) {
+      throw new RuntimeException("락 획득에 실패했습니다.");
+    }
+
+    try {
+      productFacadeService.cancelReserve(request.toCommand());
+    } finally {
+      redisLockService.releaseLock(key);
+    }
+  }
 
 }
