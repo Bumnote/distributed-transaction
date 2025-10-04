@@ -2,7 +2,7 @@ package com.example.point.application;
 
 import com.example.point.application.dto.PointReserveCommand;
 import com.example.point.application.dto.PointReserveConfirmCommand;
-import com.example.point.controller.dto.PointReserveCancelCommand;
+import com.example.point.application.dto.PointReserveCancelCommand;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
