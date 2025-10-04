@@ -51,7 +51,6 @@ public class OrderCoordinator {
       );
 
       ProductReserveApiResponse productReserveApiResponse = productApiClient.reserve(productReserveApiRequest);
-
       PointReserveApiRequest pointReserveApiRequest = new PointReserveApiRequest(
           requestId,
           1L,

@@ -16,7 +16,7 @@ public class ProductApiClient {
 
   public ProductReserveApiResponse reserve(ProductReserveApiRequest request) {
     return restClient.post()
-        .uri("/products/reserve")
+        .uri("/product/reserve")
         .body(request)
         .retrieve()
         .body(ProductReserveApiResponse.class);
@@ -24,7 +24,7 @@ public class ProductApiClient {
 
   public void confirm(ProductReserveConfirmApiRequest request) {
     restClient.post()
-        .uri("/products/confirm")
+        .uri("/product/confirm")
         .body(request)
         .retrieve()
         .toBodilessEntity();
@@ -32,7 +32,7 @@ public class ProductApiClient {
 
   public void cancel(ProductReserveCancelApiRequest request) {
     restClient.post()
-        .uri("/products/cancel")
+        .uri("/product/cancel")
         .body(request)
         .retrieve()
         .toBodilessEntity();

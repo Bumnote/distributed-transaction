@@ -1,6 +1,7 @@
 package com.example.order.controller;
 
 
+import com.example.order.application.OrderCoordinator;
 import com.example.order.application.OrderService;
 import com.example.order.application.RedisLockService;
 import com.example.order.application.dto.CreateOrderResult;
@@ -16,10 +17,12 @@ public class OrderController {
 
   private final OrderService orderService;
   private final RedisLockService redisLockService;
+  private final OrderCoordinator orderCoordinator;
 
-  public OrderController(OrderService orderService, RedisLockService redisLockService) {
+  public OrderController(OrderService orderService, RedisLockService redisLockService, OrderCoordinator orderCoordinator) {
     this.orderService = orderService;
     this.redisLockService = redisLockService;
+    this.orderCoordinator = orderCoordinator;
   }
 
   @PostMapping("/order")
@@ -31,7 +34,7 @@ public class OrderController {
   @PostMapping("/order/place")
   public void placeOrder(
       @RequestBody PlaceOrderRequest request
-  )  {
+  ) {
     String key = "order:monolithic:" + request.orderId();
     boolean acquiredLock = redisLockService.tryLock(key, request.orderId().toString());
     if (!acquiredLock) {
@@ -39,7 +42,7 @@ public class OrderController {
     }
 
     try {
-
+      orderCoordinator.placeOrder(request.toCommand());
     } finally {
       redisLockService.releaseLock(key);
     }
